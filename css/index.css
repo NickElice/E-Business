@@ -1,0 +1,16 @@
+.navbar-nav{
+    margin-left: auto;
+}
+
+.navbar-costum{
+    background-color: rgb(67, 67, 67);
+}
+
+.dropdown-menu-center {
+    right: auto;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
