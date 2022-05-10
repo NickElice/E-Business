@@ -1,5 +1,5 @@
 <?php
 
-print ""
+print "looool";
 
   ?>
