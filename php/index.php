@@ -45,7 +45,7 @@ while ($row = $result->fetch_assoc()) {
 		alt='Bild von Produkt'>
 	  <div class='card-body p-4'>
 		<div class='text-center'>
-		  <h5 class='fw-bolder'>Item 1</h5>")?> <?php print($row['Preis']) ?> <?php print(" 
+		  <h5 class='fw-bolder'>")?> <?php print($row['Proodukt_Name']) ?><?php print("</h5>") ?> <?php print($row['Preis']) ?> <?php print(" 
 		</div>
 	  </div>
 	  <div class='card-footer p-4 border-top-0 pt-0 bg-transparent'>
