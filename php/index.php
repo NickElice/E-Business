@@ -20,19 +20,25 @@ use LDAP\Result;
 	  <script src='https://kit.fontawesome.com/b05822756c.js' crossorigin='anonymous'></script>
 	</head>
 	");
-print("<body>");
+
 $mysqli = new mysqli('localhost', 'root', '', 'ebusiness');
 if ($mysqli->connect_errno) {
 	die('Verbindung fehlgeschlagen: ' . $mysqli->connect_error);
 }
-$sql = 'SELECT * FROM ebusiness.benutzer ';
+$sql = 'SELECT * FROM ebusiness.produkt';
 $statement = $mysqli->prepare($sql);
 $statement->execute();
 
 $result = $statement->get_result();
+
+//Eroeffnung statischer Tags
+print("<body>");
 print("<section class='py-5'>
 <div class='container  mt-5 px-lg-5'>
 <div class='row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center'>");
+
+
+//Erstelle so viele Cards wie Produkte es gibt 
 while ($row = $result->fetch_assoc()) {
 	print("<div class='col mb-5'>
 	<div class='card h-120'><img class='card-img-top' src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg'
@@ -48,14 +54,11 @@ while ($row = $result->fetch_assoc()) {
 	  </div>
 	</div>
   </div>
-
-
-
-
-
-
 	");
 }
+
+
+//Schliesende Tags fuer statischen teil des body
 print("
 			</div>
 			</div>
