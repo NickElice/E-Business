@@ -14,3 +14,23 @@
     transform: translate(-50%, 0);
 }
 
+.kategorie_text:hover{
+    color: gray;
+    
+}
+
+.kategorie_text{
+    color: lightgray;
+    text-decoration: none;
+}
+
+.unterkategorie_text:hover{
+    color: gray;
+    
+}
+
+.unterkategorie_text{
+    color: lightgray;
+    text-decoration: none;
+}
+

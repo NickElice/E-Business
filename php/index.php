@@ -3,7 +3,7 @@
 use LDAP\Result;
 
 //if (isset($_GET['benutzer']) && isset($_GET['passwort']) ) {
-	print("
+print("
 	<!DOCTYPE html>
 	<html>
 	
@@ -36,9 +36,19 @@ $statementKategorie = $mysqli->prepare($sqlKategorie);
 $statementKategorie->execute();
 $resultKategorie = $statementKategorie->get_result();
 /*
-
+**********************************************************
 !!!WICHTIG IMMER STATEMANTS FÜR STATEMANTS SONST FEHLER!!!
+**********************************************************
 */
+
+//Datenbank zugriff fuer Unterkategorie
+$sqlUKategorie = 'SELECT * FROM aufgabe_ebusiness.u_kategorie WHERE  aufgabe_ebusiness.u_kategorie.FK_Kategorie =?';
+$statementUKategorie = $mysqli->prepare($sqlUKategorie);
+$statementUKategorie->bind_param("i",$id);
+$id = 0;
+
+
+
 //Eroeffnung statischer Tags
 print("<body>");
 print(" 
@@ -76,28 +86,37 @@ print("
 
 print("<nav class='navbar navbar-expand-sm navbar-costum navbar-dark'>
 <div class='container'>");
-while($rowKategorie = $resultKategorie->fetch_assoc()){
-print("
+while ($rowKategorie = $resultKategorie->fetch_assoc()) {
+
+$statementUKategorie->bind_param("i",$nextId);
+$nextId = $id+1;
+$id = $nextId;
+$statementUKategorie->execute();
+$resultUKategorie = $statementUKategorie->get_result();
+	
+	print("
   <div class='dropdown'>
-	<button type='button' class='btn dropdown-toggle text-white' data-bs-toggle='dropdown'>");
+	");
+?>
+
+	<?php
+	print("<h3 class='kategorie'><a class='kategorie_text' href='#'>"); print($rowKategorie['KategorieName']); print("</a></h3>");
 	?>
 
-	<?php print($rowKategorie['KategorieName']) ?>
+	<?php 
+	while($rowUKategorie = $resultUKategorie->fetch_assoc()){
+print("<p class='unterkategorie'><a class='unterkategorie_text' href='#'>"); print($rowUKategorie['u_Kate_Name']); print("</a></p>");
+
+	}
+	?>
+	
+	
+	
+	
 	<?php
-	print("</button>
-	<ul class='dropdown-menu'>
-	  <li><a class='dropdown-item' href='#'>Link 1</a></li>
-	  <li><a class='dropdown-item' href='#'>Link 2</a></li>
-	  <li><a class='dropdown-item' href='#'>Link 3</a></li>
-	</ul>
-  </div>
-
-
-
-");
+	print("</div>");
 }
-print("</div>
-</nav>");
+print("</div></nav>");
 
 print("<section class='py-5'>
 <div class='container  mt-5 px-lg-5'>
@@ -111,7 +130,7 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 		alt='Bild von Produkt'>
 	  <div class='card-body p-4'>
 		<div class='text-center'>
-		  <h5 class='fw-bolder'>")?> <?php print($rowProdukt['Produkt_Name']) ?><?php print("</h5>") ?> <?php print($rowProdukt['Preis']) ?> <?php print("€
+		  <h5 class='fw-bolder'>") ?> <?php print($rowProdukt['Produkt_Name']) ?><?php print("</h5>") ?> <?php print($rowProdukt['Preis']) ?> <?php print("€
 		</div>
 	  </div>
 	  <div class='card-footer p-4 border-top-0 pt-0 bg-transparent'>
@@ -121,24 +140,23 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 	</div>
   </div>
 	");
-}
+																																			}
 
 
-//Schliesende Tags fuer statischen teil des body
-print("
+																																			//Schliesende Tags fuer statischen teil des body
+																																			print("
 			</div>
 			</div>
 			</section>
 ");
-print("</Body>");
-		print("</html>");
-//	if ($count == 1) {
-//		session_start();
-//		$_SESSION['username']=$user;
-//		header('location: home.php');
-//	} else {
-//		header('location: login.html');
-//	}
+																																			print("</Body>");
+																																			print("</html>");
+																																			//	if ($count == 1) {
+																																			//		session_start();
+																																			//		$_SESSION['username']=$user;
+																																			//		header('location: home.php');
+																																			//	} else {
+																																			//		header('location: login.html');
+																																			//	}
 
-//}
-?>
+//}	?>
