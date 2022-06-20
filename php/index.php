@@ -76,7 +76,7 @@ print("
 	</li>
 	<li class='nav-item'>
 
-	  <a class='nav-link' href='./login.html'>Anmelden</a>
+	  <a class='nav-link' href='../html/login.html'>Anmelden</a>
 	</li>
 
   </ul>
