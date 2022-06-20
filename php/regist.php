@@ -3,23 +3,24 @@
 use LDAP\Result;
 
 if(isset($_GET["email"]) && isset($_GET["passwort"]) && isset($_GET["username"]) ){
-$mysqli = new mysqli("localhost", "root", "", "ebissi");
-
+$mysqli = new mysqli("localhost", "root", "", "aufgabe_ebusiness");
+$user = $_GET["username"];
+$pass = $_GET["passwort"];
+$email = $_GET["email"];
 if ($mysqli->connect_errno) {
 	die("Verbindung fehlgeschlagen: " . $mysqli->connect_error);
 }
 
-$sql = "Insert Into ebusiness.benutzer(Email,Username,Password) values (?,?,?)";
+$sql = "INSERT INTO `aufgabe_ebusiness`.`user` (`User_name`,`Passwort`, `email`) VALUES (?, ?, ?)";
 $statement = $mysqli->prepare($sql);
-$statement->bind_param('sss', $email, $username, $password);
+$statement->bind_param('sss',  $user, $pass, $email);
 
-$email = $_GET["email"];
 
-$password=$_GET["passwort"];
-
-$username=$_GET["username"];
 $statement->execute();
 print("schau in DB");
+header("location: ../html/login.html");
 }
+else{
 print("nix da");
+}
 ?>

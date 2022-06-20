@@ -143,8 +143,12 @@ print("<section class='py-3'>
 //Erstelle so viele Cards wie Produkte es gibt 
 while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 	print("<div class='col mb-5'>
-	<div class='card h-120'><img class='card-img-top' src='https://dummyimage.com/450x300/dee2e6/6c757d.jpg'
-		alt='Bild von Produkt'>
+	<div class='card h-120'><img class='card-img-top' src='"); 
+	
+	print($rowProdukt["Bild_Path"]);
+	
+	print("
+		'alt='Bild von Produkt'>
 	  <div class='card-body p-4'>
 		<div class='text-center'>
 		  <h5 class='fw-bolder'>") ?> <?php print($rowProdukt['Produkt_Name']) ?><?php print("</h5>") ?> <?php print($rowProdukt['Preis']) ?> <?php print("€
@@ -157,22 +161,13 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 	</div>
   </div>
 	");
-																																			}
-
-
-																																			//Schliesende Tags fuer statischen teil des body
-																																			print("
+}
+//Schliesende Tags fuer statischen teil des body
+print("
 			</div>
 			</div>
 			</section>
 ");
 	session_destroy();																																print("</Body>");
 																																			print("</html>");
-																																			//	if ($count == 1) {
-																																			//		session_start();
-																																			//		$_SESSION['username']=$user;
-																																			//		header('location: home.php');
-																																			//	} else {
-																																			//		header('location: login.html');
-
-//}	?>
+?>
