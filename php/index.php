@@ -1,7 +1,7 @@
 <?php
 
 use LDAP\Result;
-
+session_start();
 //if (isset($_GET['benutzer']) && isset($_GET['passwort']) ) {
 print("
 	<!DOCTYPE html>
@@ -75,8 +75,15 @@ print("
 	  <a class='nav-link' href='#'>Über uns</a>
 	</li>
 	<li class='nav-item'>
-
-	  <a class='nav-link' href='../html/login.html'>Anmelden</a>
+");?>
+	<?php if(isset($_SESSION["username"]))
+	  { print("<a class='nav-link' href='logout.php'>"); 
+		print("Abmelden");
+	}else {
+	print("<a class='nav-link' href='../html/login.html'>"); print("Anmelden");
+	 
+	}
+	 print("</a>
 	</li>
 
   </ul>
@@ -117,8 +124,18 @@ print("<p class='unterkategorie'><a class='unterkategorie_text' href='#'>"); pri
 	print("</div>");
 }
 print("</div></nav>");
+if(isset($_SESSION["username"])){
+print("
+<div class='container mt-4 px-lg-3'>
+    <h3>Hallo,");
+	$user = $_SESSION["username"];
 
-print("<section class='py-5'>
+	print(" $user</h3>
+</div>
+
+");
+}
+print("<section class='py-3'>
 <div class='container  mt-5 px-lg-5'>
 <div class='row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center'>");
 
@@ -149,7 +166,7 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 			</div>
 			</section>
 ");
-																																			print("</Body>");
+	session_destroy();																																print("</Body>");
 																																			print("</html>");
 																																			//	if ($count == 1) {
 																																			//		session_start();
@@ -157,6 +174,5 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 																																			//		header('location: home.php');
 																																			//	} else {
 																																			//		header('location: login.html');
-																																			//	}
 
 //}	?>

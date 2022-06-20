@@ -20,7 +20,9 @@ $anzahltreffer = $result->num_rows;
 
 if($anzahltreffer == 1){
 	session_start();
-	$_SESSION["username"]=$user;
+	$rowUser = $result->fetch_assoc();
+
+	$_SESSION["username"]= $rowUser["User_name"];
 	header("location: index.php");
 }
 	else{
