@@ -51,15 +51,20 @@ if(isset($_GET["Kat"])){
 
 $sqlProdukt = 'SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt, aufgabe_ebusiness.u_kategorie WHERE aufgabe_ebusiness.u_kategorie.FK_Kategorie ='. $Kat .' AND aufgabe_ebusiness.u_kategorie.u_KateID = aufgabe_ebusiness.produkt.FK_u_kate';
 
+}else if(isset($_GET["search"])){
+$search = $_GET["search"];
+$sqlProdukt = 'SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt WHERE aufgabe_ebusiness.produkt.Produkt_Name LIKE "'.  $search.'%"';
+
 }else{
 	$sqlProdukt = 'SELECT * FROM aufgabe_ebusiness.produkt';
 }
+
 $statementProdukt = $mysqli->prepare($sqlProdukt);
 $statementProdukt->execute();
 $resultProdukt = $statementProdukt->get_result();
 
 
-
+//Search SQL Statement
 
 
 
