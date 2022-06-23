@@ -55,7 +55,14 @@ $sqlProdukt = 'SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt
 $search = $_GET["search"];
 $sqlProdukt = 'SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt WHERE aufgabe_ebusiness.produkt.Produkt_Name LIKE "'.  $search.'%"';
 
-}else{
+}else if(isset($_GET["ukat"])){
+	$uKat = $_GET["ukat"];
+	$sqlProdukt = "SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt, aufgabe_ebusiness.u_kategorie WHERE aufgabe_ebusiness.produkt.FK_u_kate =  $ukat";
+}else
+
+
+
+{
 	$sqlProdukt = 'SELECT * FROM aufgabe_ebusiness.produkt';
 }
 
@@ -133,7 +140,7 @@ $resultUKategorie = $statementUKategorie->get_result();
 
 	<?php 
 	while($rowUKategorie = $resultUKategorie->fetch_assoc()){
-print("<p class='unterkategorie'><a class='unterkategorie_text' href='#'>"); print($rowUKategorie['u_Kate_Name']); print("</a></p>");
+print("<p class='unterkategorie'><a class='unterkategorie_text' href='./index.php?ukat=$rowUKategorie[u_KateID]'>"); print($rowUKategorie['u_Kate_Name']); print("</a></p>");
 
 	}
 	?>
