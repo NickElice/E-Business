@@ -21,14 +21,14 @@ print("
 	</head>
 	");
 
-$mysqli = new mysqli('localhost', 'root', '', 'aufgabe_ebusiness');
+$mysqli = new mysqli('141.79.25.220', 'lschmid5', 'abc123', 'BIS_POS_lschmid5');
 if ($mysqli->connect_errno) {
 	die('Verbindung fehlgeschlagen: ' . $mysqli->connect_error);
 }
 
 
 //Kategorien für die Navbar
-$sqlKategorie = 'SELECT * FROM aufgabe_ebusiness.kategorie';
+$sqlKategorie = 'SELECT * FROM .kategorie';
 $statementKategorie = $mysqli->prepare($sqlKategorie);
 $statementKategorie->execute();
 $resultKategorie = $statementKategorie->get_result();
@@ -39,7 +39,7 @@ $resultKategorie = $statementKategorie->get_result();
 */
 
 //Datenbank zugriff fuer Unterkategorie
-$sqlUKategorie = 'SELECT * FROM aufgabe_ebusiness.u_kategorie WHERE  aufgabe_ebusiness.u_kategorie.FK_Kategorie =?';
+$sqlUKategorie = 'SELECT * FROM BIS_POS_lschmid5.u_kategorie WHERE  BIS_POS_lschmid5.u_kategorie.FK_Kategorie =?';
 $statementUKategorie = $mysqli->prepare($sqlUKategorie);
 $statementUKategorie->bind_param("i",$id);
 $id = 0;
@@ -49,14 +49,14 @@ $id = 0;
 if(isset($_GET["Kat"])){
 	$Kat = $_GET["Kat"];
 
-$sqlProdukt = 'SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt, aufgabe_ebusiness.u_kategorie WHERE aufgabe_ebusiness.u_kategorie.FK_Kategorie ='. $Kat .' AND aufgabe_ebusiness.u_kategorie.u_KateID = aufgabe_ebusiness.produkt.FK_u_kate';
+$sqlProdukt = 'SELECT BIS_POS_lschmid5.produkt.* FROM BIS_POS_lschmid5.produkt, BIS_POS_lschmid5.u_kategorie WHERE BIS_POS_lschmid5.u_kategorie.FK_Kategorie ='. $Kat .' AND BIS_POS_lschmid5.u_kategorie.u_KateID = BIS_POS_lschmid5.produkt.FK_u_kate';
 
 }else
  if(isset($_GET["ukat"])){
 	$uKat = $_GET["ukat"];
-	$sqlProdukt = "SELECT aufgabe_ebusiness.produkt.* FROM aufgabe_ebusiness.produkt, aufgabe_ebusiness.u_kategorie WHERE aufgabe_ebusiness.produkt.FK_u_kate =  $uKat  AND aufgabe_ebusiness.produkt.FK_u_kate = aufgabe_ebusiness.u_kategorie.u_KateID ";
+	$sqlProdukt = "SELECT BIS_POS_lschmid5.produkt.* FROM BIS_POS_lschmid5.produkt, BIS_POS_lschmid5.u_kategorie WHERE BIS_POS_lschmid5.produkt.FK_u_kate =  $uKat  AND BIS_POS_lschmid5.produkt.FK_u_kate = BIS_POS_lschmid5.u_kategorie.u_KateID ";
 }else{
-	$sqlProdukt = 'SELECT * FROM aufgabe_ebusiness.produkt';
+	$sqlProdukt = 'SELECT * FROM BIS_POS_lschmid5.produkt';
 }
 $statementProdukt = $mysqli->prepare($sqlProdukt);
 $statementProdukt->execute();
@@ -89,7 +89,7 @@ print("
   </div>
   <ul class='navbar-nav'>
 	<li class='nav-item'>
-	  <a class='nav-link ' href='./cart.html'>Warenkorb</a>
+	  <a class='nav-link ' href='./cart.php'>Warenkorb</a>
 	</li>
 	<li class='nav-item'>
 	  <a class='nav-link' href='#'>Über uns</a>
@@ -99,6 +99,12 @@ print("
 	<?php if(isset($_SESSION["username"]))
 	  { print("<a class='nav-link' href='logout.php'>"); 
 		print("Abmelden");
+		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 10)) {
+			// last request was more than 30 minutes ago
+			session_unset();     // unset $_SESSION variable for the run-time 
+			session_destroy();   // destroy session data in storage
+		}
+		$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 	}else {
 	print("<a class='nav-link' href='../html/login.html'>"); print("Anmelden");
 	 
@@ -150,7 +156,7 @@ print("
     <h3>Hallo,");
 	$user = $_SESSION["username"];
 
-	print(" $user</h3>
+	print(" $user</h3> 
 </div>
 
 ");
@@ -162,7 +168,8 @@ print("<section class='py-3'>
 
 //Erstelle so viele Cards wie Produkte es gibt 
 while ($rowProdukt = $resultProdukt->fetch_assoc()) {
-	print("<div class='col mb-5'>
+	print("<form action='../php/addToCart.php'>
+	<div class='col mb-5'>
 	<div class='card h-120'><img class='card-img-top' src='"); 
 	
 	print($rowProdukt["Bild_Path"]);
@@ -171,11 +178,17 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 		'alt='Bild von Produkt'>
 	  <div class='card-body p-4'>
 		<div class='text-center'>
-		  <h5 class='fw-bolder'>") ?> <?php print($rowProdukt['Produkt_Name']) ?><?php print("</h5>") ?> <?php print($rowProdukt['Preis']) ?> <?php print("€
+		  <h5 class='fw-bolder' name='produktname'>"); ?>
+		  
+		  <?php print($rowProdukt['Produkt_Name']); ?>
+		  <?php print("</h5>"); ?> <?php print("<p name='preis'>");
+		   print($rowProdukt['Preis']);
+		 ?> 
+			<?php print("€ </p>
 		</div>
 	  </div>
 	  <div class='card-footer p-4 border-top-0 pt-0 bg-transparent'>
-		<div class='text-center'><a class='btn btn-outline-dark mt-auto' href='#'>Zu Warenkorb hinzufügen</a>
+		 <div class='text-center'><button type='submit' name='cart' value='$rowProdukt[Produkt_Name]'>Zu warenkorb hinzufügen</button>
 		</div>
 	  </div>
 	</div>
@@ -189,6 +202,17 @@ print("
 			</div>
 			</section>
 ");
-	session_destroy();																																print("</Body>");
-																																			print("</html>");
+
+																															
+			print("</Body>");
+			print("</html>");
+
+
+
+
+
+?><?php
+$_SESSION["start"] = time();
+
+
 ?>
