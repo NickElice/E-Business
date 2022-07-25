@@ -6,11 +6,11 @@ if (isset($_GET['email']) && isset($_GET['passwort']) ) {
 $email= $_GET['email'];
 $pass= $_GET['passwort'];
 
-$mysqli = new mysqli("141.79.25.220", "lschmid5", "abc123", "BIS_POS_lschmid5");
+$mysqli = new mysqli("141.79.25.220", "nelice", "fruchttiger1", "BIS_DB_nelice");
 if ($mysqli->connect_errno) {
 	die("Verbindung fehlgeschlagen: " . $mysqli->connect_error);
 }
-$sql = "SELECT * FROM BIS_POS_lschmid5.user where BIS_POS_lschmid5.user.email = ? and BIS_POS_lschmid5.user.Passwort = ? ";
+$sql = "SELECT * FROM BIS_DB_nelice.user where BIS_DB_nelice.user.email = ? and BIS_DB_nelice.user.Passwort = ? ";
 $statement = $mysqli->prepare($sql);
 $statement->bind_param("ss",$email, $pass);
 $statement->execute();

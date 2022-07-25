@@ -168,7 +168,7 @@ print("<section class='py-3'>
 
 //Erstelle so viele Cards wie Produkte es gibt 
 while ($rowProdukt = $resultProdukt->fetch_assoc()) {
-	print("<form action='../php/addToCart.php'>
+	print("<form action='../php/addToCart.php ' method='get'>
 	<div class='col mb-5'>
 	<div class='card h-120'><img class='card-img-top' src='"); 
 	
@@ -188,11 +188,12 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 		</div>
 	  </div>
 	  <div class='card-footer p-4 border-top-0 pt-0 bg-transparent'>
-		 <div class='text-center'><button type='submit' name='cart' value='$rowProdukt[Produkt_Name]'>Zu warenkorb hinzufügen</button>
+		 <div class='text-center'><button type='submit' name='cartItem' value='$rowProdukt[Produkt_Name]'>Zu warenkorb hinzufügen</button>
 		</div>
 	  </div>
 	</div>
   </div>
+  </form>
 	");
 }
 
@@ -210,9 +211,5 @@ print("
 
 
 
-
-?><?php
-$_SESSION["start"] = time();
-
-
+echo $_SESSION["cartItem"];
 ?>
