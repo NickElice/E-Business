@@ -3,6 +3,40 @@
 use LDAP\Result;
 session_start();
 //if (isset($_GET['benutzer']) && isset($_GET['passwort']) ) {
+	
+	function isLoginSessionExpired() {
+		$login_session_duration = 900; 
+	//	$current_time = time(); 
+		if(isset($_SESSION['timeout']) && isset($_SESSION['username'])){  
+			if(((time() - $_SESSION['timeout']) > $login_session_duration)){ 
+				
+				$_SESSION['timeout'] = time();
+				$_SESSION['timeoutBool'] = true;  // update creation time
+				return true; 
+			} 
+		}
+		$_SESSION['timeout'] = time();
+		$_SESSION['timeoutBool'] = false;
+		return false;
+	}
+	if(isset($_SESSION["username"])) {
+		if(isLoginSessionExpired()) {
+			header("Location: logout.php");
+		}
+	}
+/*
+	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 10)) {
+		// last request was more than 30 minutes ago
+		echo "session expired: ".(time() - $_SESSION['LAST_ACTIVITY'])." sek.";
+		$expired = true;
+		session_unset();
+		session_destroy();   // destroy session data in storage
+		
+	}else{
+	$_SESSION['LAST_ACTIVITY'] = time();
+	}
+	$_SESSION["expired"]=$expired;
+	*/
 print("
 	<!DOCTYPE html>
 	<html>
@@ -99,12 +133,7 @@ print("
 	<?php if(isset($_SESSION["username"]))
 	  { print("<a class='nav-link' href='logout.php'>"); 
 		print("Abmelden");
-		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 10)) {
-			// last request was more than 30 minutes ago
-			session_unset();     // unset $_SESSION variable for the run-time 
-			session_destroy();   // destroy session data in storage
-		}
-		$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
 	}else {
 	print("<a class='nav-link' href='../html/login.html'>"); print("Anmelden");
 	 
@@ -150,6 +179,7 @@ print("<p class='unterkategorie'><a class='unterkategorie_text' href='./index.ph
 	print("</div>");
 }
 print("</div></nav>");
+if(!isLoginSessionExpired()){
 if(isset($_SESSION["username"])){
 print("
 <div class='container mt-4 px-lg-3'>
@@ -160,6 +190,14 @@ print("
 </div>
 
 ");
+}else{
+	print("
+	<div class='container mt-4 px-lg-3'>
+		<h3>Bitte neu einloggen!</h3> 
+	</div>
+	
+	");
+}
 }
 print("<section class='py-3'>
 <div class='container  mt-5 px-lg-5'>
@@ -204,12 +242,12 @@ print("
 			</section>
 ");
 
-																															
+			print("<form action='../php/testCart.php ' method='get'><button type='submit' name='cartItem' value='$rowProdukt[Produkt_Name]'>Zu warenkorb hinzufügen</button></form>");																					
 			print("</Body>");
 			print("</html>");
 
 
 
 
-echo $_SESSION["cartItem"];
+
 ?>

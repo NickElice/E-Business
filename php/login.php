@@ -23,6 +23,8 @@ if($anzahltreffer == 1){
 	$rowUser = $result->fetch_assoc();
 
 	$_SESSION["username"]= $rowUser["User_name"];
+	$_SESSION["cartItem"] = array();
+	$_SESSION["timeout"] = time();
 	header("location: index.php");
 }
 	else{

@@ -1,4 +1,5 @@
 <?php
+session_start();
 print("
 
 <!DOCTYPE html>
@@ -95,12 +96,7 @@ print("
 	<?php if(isset($_SESSION["username"]))
 	  { print("<a class='nav-link' href='logout.php'>"); 
 		print("Abmelden");
-		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 10)) {
-			// last request was more than 30 minutes ago
-			session_unset();     // unset $_SESSION variable for the run-time 
-			session_destroy();   // destroy session data in storage
-		}
-		$_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+	
 	}else {
 	print("<a class='nav-link' href='../html/login.html'>"); print("Anmelden");
 	 
@@ -114,60 +110,49 @@ print("
 ");
 
 
+$mysqli = new mysqli('141.79.25.220', 'lschmid5', 'abc123', 'BIS_POS_lschmid5');
+if ($mysqli->connect_errno) {
+	die('Verbindung fehlgeschlagen: ' . $mysqli->connect_error);
+}
 
 
-print("
-<body>
-<div class='col-md-8 cart'>
-                    <div class='title'>
-                        <div class='row'>
-                            <div class='col'><h4><b>Shopping Cart</b></h4></div>
-                            <div class='col align-self-center text-right text-muted'>3 items</div>
-                        </div>
-                    </div>    
-                    <div class='row border-top border-bottom'>
-                        <div class='row main align-items-center'>
-                            <div class='col-2'><img class='img-fluid' src='https://i.imgur.com/1GrakTl.jpg'></div>
-                            <div class='col'>
-                                <div class='row text-muted'>Shirt</div>
-                                <div class='row'>Cotton T-shirt</div>
+//Kategorien für die Navbar
+print("<body><div class='col-md-8 cart'>
+                        <div class='title'>
+                            <div class='row'>
+                                <div class='col'><h4><b>Shopping Cart</b></h4></div>
+                               
                             </div>
-                            <div class='col'>
-                                <a href='#'>-</a><a href='#' class='border'>1</a><a href='#'>+</a>
-                            </div>
-                            <div class='col'>€ 44.00 <span class='close'>✕</span></div>
-                        </div>
-                    </div>
-                    <div class='row'>
-                        <div class='row main align-items-center'>
-                            <div class='col-2'><img class='img-fluid' src='https://i.imgur.com/ba3tvGm.jpg'></div>
-                            <div class='col'>
-                                <div class='row text-muted'>Shirt</div>
-                                <div class='row'>Cotton T-shirt</div>
-                            </div>
-                            <div class='col'>
-                                <a href='#'>-</a><a href='#' class='border'>1</a><a href='#'>+</a>
-                            </div>
-                            <div class='col'>€ 44.00 <span class='close'>✕</span></div>
-                        </div>
-                    </div>
-                    <div class='row border-top border-bottom'>
-                        <div class='row main align-items-center'>
-                            <div class='col-2'><img class='img-fluid' src='https://i.imgur.com/pHQ3xT3.jpg'></div>
-                            <div class='col'>
-                                <div class='row text-muted'>Shirt</div>
-                                <div class='row'>Cotton T-shirt</div>
-                            </div>
-                            <div class='col'>
-                                <a href='#'>-</a><a href='#' class='border'>1</a><a href='#'>+</a>
-                            </div>
-                            <div class='col'>€ 44.00 <span class='close'>✕</span></div>
-                        </div>
-                    </div>
-                    <div class='back-to-shop'><a href='#'>←</a><span class='text-muted'>Back to shop</span></div>
-                </div>
-                </body>
-                </html>
+                        </div> ");
+for($i = 0; $i < count($_SESSION["cartItem"]); $i++){
+$sql= 'SELECT * FROM BIS_POS_lschmid5.produkt WHERE  BIS_POS_lschmid5.produkt.Produkt_Name = "'. $_SESSION["cartItem"][$i].'"';
+//print($sql."<br>");
 
-");
-?>
+$statement = $mysqli->prepare($sql);
+$statement->execute();
+$result = $statement->get_result();
+
+while($rowCartItem = $result->fetch_assoc()){
+  //  print($rowCartItem["Produkt_Name"]."<br><img class='card-img-top' src='".$rowCartItem["Bild_Path"]."'><br>");
+
+    print("    
+                        <div class='row border-top border-bottom'>
+                            <div class='row main align-items-center'>
+                                <div class='col-2'><img class='img-fluid' src='".$rowCartItem["Bild_Path"]."'></div>
+                                <div class='col'>
+                         
+                                    <div class='row'>".$rowCartItem["Produkt_Name"]."</div>
+                                </div>
+                                <div class='col'>
+                                 
+                                </div>
+                                <div class='col'>".$rowCartItem["Preis"]."<span class='close'>€</span></div>
+                            </div>
+                        </div>
+                      
+                       ");
+                   
+}
+}
+print(" <div class='back-to-shop'><a href='../php/index.php'>←</a><span class='text-muted'>Back to shop</span></div>
+</div></body>");
