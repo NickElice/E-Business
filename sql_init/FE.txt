@@ -1,0 +1,123 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema BIS_POS_lschmid5
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `BIS_POS_lschmid5` ;
+
+-- -----------------------------------------------------
+-- Schema BIS_POS_lschmid5
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `BIS_POS_lschmid5` DEFAULT CHARACTER SET latin1 ;
+-- -----------------------------------------------------
+-- Schema BIS_POS_lschmid5
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `BIS_POS_lschmid5` ;
+
+-- -----------------------------------------------------
+-- Schema BIS_POS_lschmid5
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `BIS_POS_lschmid5` DEFAULT CHARACTER SET latin1 ;
+USE `BIS_POS_lschmid5` ;
+
+-- -----------------------------------------------------
+-- Table `BIS_POS_lschmid5`.`kategorie`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `BIS_POS_lschmid5`.`kategorie` ;
+
+CREATE TABLE IF NOT EXISTS `BIS_POS_lschmid5`.`kategorie` (
+  `KategorieID` INT(11) NOT NULL,
+  `KategorieName` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`KategorieID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `BIS_POS_lschmid5`.`u_kategorie`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `BIS_POS_lschmid5`.`u_kategorie` ;
+
+CREATE TABLE IF NOT EXISTS `BIS_POS_lschmid5`.`u_kategorie` (
+  `u_KateID` INT(11) NOT NULL,
+  `u_Kate_Name` VARCHAR(50) NOT NULL,
+  `FK_Kategorie` INT(11) NOT NULL,
+  PRIMARY KEY (`u_KateID`),
+  INDEX `FK_u_kategorie_kategorie` (`FK_Kategorie` ASC) VISIBLE,
+  CONSTRAINT `FK_u_kategorie_kategorie`
+    FOREIGN KEY (`FK_Kategorie`)
+    REFERENCES `BIS_POS_lschmid5`.`kategorie` (`KategorieID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `BIS_POS_lschmid5`.`produkt`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `BIS_POS_lschmid5`.`produkt` ;
+
+CREATE TABLE IF NOT EXISTS `BIS_POS_lschmid5`.`produkt` (
+  `ProduktID` INT(11) NOT NULL,
+  `Produkt_Name` VARCHAR(50) NULL DEFAULT NULL,
+  `FK_u_kate` INT(11) NULL DEFAULT NULL,
+  `Preis` INT(11) NULL DEFAULT NULL,
+  `Bild_Path` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`ProduktID`),
+  INDEX `FK_produkt_u_kategorie` (`FK_u_kate` ASC) VISIBLE,
+  CONSTRAINT `FK_produkt_u_kategorie`
+    FOREIGN KEY (`FK_u_kate`)
+    REFERENCES `BIS_POS_lschmid5`.`u_kategorie` (`u_KateID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `BIS_POS_lschmid5`.`user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `BIS_POS_lschmid5`.`user` ;
+
+CREATE TABLE IF NOT EXISTS `BIS_POS_lschmid5`.`user` (
+  `UserID` INT(11) NOT NULL AUTO_INCREMENT,
+  `User_name` VARCHAR(50) NOT NULL,
+  `Vorname` VARCHAR(50) NOT NULL,
+  `Nachname` VARCHAR(50) NOT NULL,
+  `Passwort` VARCHAR(50) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`UserID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 8
+DEFAULT CHARACTER SET = utf8mb4;
+
+
+-- -----------------------------------------------------
+-- Table `BIS_POS_lschmid5`.`bestellungDetails`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `BIS_POS_lschmid5`.`bestellungDetails` ;
+
+CREATE TABLE IF NOT EXISTS `BIS_POS_lschmid5`.`bestellungDetails` (
+  `produkt_ProduktID` INT(11) NOT NULL,
+  `anzahlProdukt` VARCHAR(45) NULL,
+  `warenkorbID` INT(11) NOT NULL,
+  `user_UserID` INT(11) NOT NULL,
+  INDEX `fk_bestellungDetails_user1_idx` (`user_UserID` ASC) VISIBLE,
+  PRIMARY KEY (`warenkorbID`),
+  CONSTRAINT `fk_bestellungDetails_produkt1`
+    FOREIGN KEY (`produkt_ProduktID`)
+    REFERENCES `BIS_POS_lschmid5`.`produkt` (`ProduktID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_bestellungDetails_user1`
+    FOREIGN KEY (`user_UserID`)
+    REFERENCES `BIS_POS_lschmid5`.`user` (`UserID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+USE `BIS_POS_lschmid5` ;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
