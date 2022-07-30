@@ -124,6 +124,7 @@ print("<body><div class='col-md-8 cart'>
                                
                             </div>
                         </div> ");
+                        print("<form action='../php/sendOrder.php' method='get'>");
 for($i = 0; $i < count($_SESSION["cartItem"]); $i++){
 $sql= 'SELECT * FROM BIS_POS_lschmid5.produkt WHERE  BIS_POS_lschmid5.produkt.Produkt_Name = "'. $_SESSION["cartItem"][$i].'"';
 //print($sql."<br>");
@@ -141,7 +142,7 @@ while($rowCartItem = $result->fetch_assoc()){
                                 <div class='col-2'><img class='img-fluid' src='".$rowCartItem["Bild_Path"]."'></div>
                                 <div class='col'>
                          
-                                    <div class='row'>".$rowCartItem["Produkt_Name"]."</div>
+                                    <div class='row' name='produktName'>".$rowCartItem["Produkt_Name"]."</div>
                                 </div>
                                 <div class='col'>
                                  
@@ -154,5 +155,7 @@ while($rowCartItem = $result->fetch_assoc()){
                    
 }
 }
-print(" <div class='back-to-shop'><a href='../php/index.php'>←</a><span class='text-muted'>Back to shop</span></div>
+print(" <div class='back-to-shop'><a href='../php/index.php'>←</a><span class='text-muted'>Back to shop</span>
+  <button type='submit'>Bestellung abschicken</button>
+</div></form>
 </div></body>");

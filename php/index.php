@@ -2,6 +2,8 @@
 
 use LDAP\Result;
 session_start();
+
+$_SESSION["all"] = array();
 //if (isset($_GET['benutzer']) && isset($_GET['passwort']) ) {
 	
 	function isLoginSessionExpired() {
@@ -218,7 +220,9 @@ while ($rowProdukt = $resultProdukt->fetch_assoc()) {
 		<div class='text-center'>
 		  <h5 class='fw-bolder' name='produktname'>"); ?>
 		  
-		  <?php print($rowProdukt['Produkt_Name']); ?>
+		  <?php print($rowProdukt['Produkt_Name']); 
+		  array_push($_SESSION["all"],$rowProdukt['Produkt_Name']);
+		  ?>
 		  <?php print("</h5>"); ?> <?php print("<p name='preis'>");
 		   print($rowProdukt['Preis']);
 		 ?> 
