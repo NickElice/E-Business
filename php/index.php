@@ -124,8 +124,14 @@ print("
 	</div>
   </div>
   <ul class='navbar-nav'>
-	<li class='nav-item'>
-	  <a class='nav-link ' href='./cart.php'>Warenkorb</a>
+	<li class='nav-item'>");
+
+if(isset($_SESSION["username"])){
+	 print("<a class='nav-link ' href='./cart.php'>Warenkorb</a>");
+}else{
+	print("<a class='nav-link ' href='../html/login.html'>Warenkorb</a>");
+} 
+	  print("
 	</li>
 	<li class='nav-item'>
 	  <a class='nav-link' href='#'>Über uns</a>
