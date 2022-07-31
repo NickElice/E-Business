@@ -9,6 +9,7 @@ if ($mysqli->connect_errno) {
 $user = $_SESSION["username"];
 $sqlUserID = 'SELECT UserID FROM BIS_POS_lschmid5.user WHERE  BIS_POS_lschmid5.user.User_name = "'.$user.'"';
 echo $sqlUserID;
+print_r($_SESSION["cartItem"]); 
 $statement = $mysqli->prepare($sqlUserID);
 $statement->execute();
 $result = $statement->get_result();
@@ -18,39 +19,39 @@ $userID = $rowUser["UserID"];
 /*************AUS PRODUKTNAME DIE PRODUKT ID LESEN */
 $rowProdukt;
 $produktID;
-for($i = 0; $i < count($_SESSION["cartItem"]); $i++){
-    $produkt =$_SESSION["cartItem"][$i];
-    $sqlProduktID = 'SELECT ProduktID FROM BIS_POS_lschmid5.produkt WHERE  BIS_POS_lschmid5.produkt.Produkt_Name = "'. $_SESSION["cartItem"][$i].'"';
-    
+
+$j =0;
+while($j < count($_SESSION["cartItem"])){
+     
+   
+ 
+    $produkt = $_SESSION["cartItem"][$j];
+    $sqlProduktID = 'SELECT ProduktID FROM BIS_POS_lschmid5.produkt WHERE  BIS_POS_lschmid5.produkt.Produkt_Name = "'.$produkt.'"';
     $statement = $mysqli->prepare($sqlProduktID);
     $statement->execute();
     $result = $statement->get_result();
     $rowProdukt = $result->fetch_assoc();
     $produktID = $rowProdukt["ProduktID"];
-    array_push($_SESSION["pID"],$rowProdukt["ProduktID"]);
-    print("<br>". $_SESSION["pID"][$i]." name:".$_SESSION["cartItem"][$i]);
-}
-$count;
-for($i = 0; $i < count($_SESSION["all"]); $i++){
-    $count = 0;
- for($j = 0; $j < count($_SESSION["cartItem"]); $j++){
-    
-    //print("<br>". $_SESSION["cartItem"][$j]." ID:".$produktID);
-     if($_SESSION["all"][$i]==$_SESSION["cartItem"][$j]){
-        $count++;
-     }
-     
- }if($count>0){
-     $countStr = (string) $count;
-    $sqlInsert = "INSERT INTO `BIS_POS_lschmid5`.`bestellungDetails` (`produkt_ProduktID`,`anzahlProdukt`, `user_UserID`, `bestellungDatum`) VALUES (?, ?, ?, NOW())";
-    $statement = $mysqli->prepare($sqlInsert);
-    $statement->bind_param('isi',  $produktID, $countStr, $userID);
-    $statement->execute();
- }
+    print("<br> UserID: ".$userID);
+    print("<br> ProduktID: ".$produktID);
+    array_push($_SESSION["pID"], $produktID);
  
 
-}
 
+    
+    $sqlInsert = "INSERT INTO `BIS_POS_lschmid5`.`bestellungDetails` (`produkt_ProduktID`, `user_UserID`, `bestellungDatum`) VALUES (?, ?, NOW())";
+    $statement = $mysqli->prepare($sqlInsert);
+    $statement->bind_param('ii',  $produktID,  $userID);
+    $statement->execute();
+
+   $j++; }
+ 
+  
+
+ 
+//}
+print("<br>");
+print_r($_SESSION["pID"]);
 /*
 $sqlInsert = "NSERT INTO `BIS_POS_lschmid5`.`bestellungDetails` (`produkt_ProduktID`,`anzahlProdukt`, `user_UserID`, `bestellungDatum`) VALUES (?, ?, ?, NOW())";
 $statement = $mysqli->prepare($sql);
